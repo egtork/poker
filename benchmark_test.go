@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	cardsPerHand   = 8
+	cardsPerHand   = 5
 	handsGenerated = 100000
 )
 
