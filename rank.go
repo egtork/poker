@@ -1,6 +1,8 @@
 package poker
 
-import "log"
+import (
+	"log"
+)
 
 type HandRank int
 
@@ -153,13 +155,13 @@ func (h Hand) bestTwoPairHand() Hand {
 	var secondPair Cards
 	var kicker *Card
 	for i := 0; i < len(h); i++ {
-		if i < len(h)-1 && h[i] == h[i+1] {
+		if i < len(h)-1 && h[i].Rank == h[i+1].Rank {
 			if firstPair == nil {
 				firstPair = Cards{h[i], h[i+1]}
 			} else {
 				secondPair = Cards{h[i], h[i+1]}
 			}
-			i += 1
+			i++
 		} else if kicker == nil {
 			kicker = h[i]
 		}

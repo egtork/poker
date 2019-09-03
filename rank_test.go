@@ -111,6 +111,18 @@ var tests = []Test{
 		},
 	},
 	Test{
+		desc: "TwoPair",
+		fn:   Hand.bestTwoPairHand,
+		p: []PositiveTestCase{
+			PositiveTestCase{"AsJsJd8c6d3s6s", "JsJd6d6sAs"},
+			PositiveTestCase{"AsJsJdJc6dAc2h", "AsAcJsJdJc"},
+			PositiveTestCase{"6h2h3h2c6c", "6h6c2h2c3h"},
+		},
+		n: []string{
+			"8cAsJs6d3h",
+		},
+	},
+	Test{
 		desc: "Pair",
 		fn:   Hand.bestPairHand,
 		p: []PositiveTestCase{
