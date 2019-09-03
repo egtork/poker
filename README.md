@@ -2,7 +2,7 @@
 
 Poker hand evaluator library in Go.
 
-# Benchmarks
+## Benchmarks
 
   * 2.2 million hands/second (2019-09-02)
 
