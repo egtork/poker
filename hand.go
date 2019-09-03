@@ -25,12 +25,3 @@ func NewHand(s string) Hand {
 func (h Hand) Sort() {
 	sort.SliceStable(h, func(i, j int) bool { return h[i].Rank > h[j].Rank })
 }
-
-// func (h Hand) Sort() {
-// 	sort.Slice(h, func(i, j int) bool {
-// 		if h[i].Rank == h[j].Rank {
-// 			return h[i].Suit < h[j].Suit
-// 		}
-// 		return h[i].Rank > h[j].Rank
-// 	})
-// }
