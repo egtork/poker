@@ -47,19 +47,6 @@ type Test struct {
 
 var tests = []Test{
 	Test{
-		desc: "StraightFlush",
-		fn:   Hand.bestStraightFlushHand,
-		p: []PositiveTestCase{
-			PositiveTestCase{"2h3h4h5h6h", "6h5h4h3h2h"},
-			PositiveTestCase{"Ah2h3h4h5h", "5h4h3h2hAh"},
-			PositiveTestCase{"2h3h3d4h5h6h8s", "6h5h4h3h2h"},
-		},
-		n: []string{
-			"2h3h4h5d6h7h8h",
-			"2h3h4hTd6h7h8h",
-		},
-	},
-	Test{
 		desc: "FourOfAKind",
 		fn:   Hand.bestFourOfAKindHand,
 		p: []PositiveTestCase{
@@ -160,6 +147,56 @@ func TestRanking(t *testing.T) {
 			if got := test.fn(NewHand(nTest)); got != nil {
 				t.Errorf("%v: Got %v, want nil.", test.desc, got)
 			}
+		}
+	}
+}
+
+func TestStraighFlushRanking(t *testing.T) {
+	// Straight flush
+	t1 := [][]string{
+		[]string{"2h3h4h5h6h", "6h5h4h3h2h", "6h5h4h3h2h"},
+		[]string{"Ah2h3h4h5h", "5h4h3h2hAh", "Ah5h4h3h2h"},
+		[]string{"2h3h3d4h5h6hAh", "6h5h4h3h2h", "Ah6h5h4h3h"},
+	}
+	for _, test := range t1 {
+		sfGot, fGot := Hand.bestStraightFlushHand(NewHand(test[0]))
+		sfWant := NewHandUnsorted(test[1])
+		fWant := NewHandUnsorted(test[2])
+		if !cardsEqual(sfGot, sfWant) {
+			t.Errorf("Straight flush: Got %v, want %v", sfGot, sfWant)
+		}
+		if !cardsEqual(fGot, fWant) {
+			t.Errorf("Flush: Got %v, want %v", fGot, fWant)
+		}
+	}
+	// No straight flush, flush
+	t2 := [][]string{
+		[]string{"2h3h4h5h7h", "7h5h4h3h2h"},
+		[]string{"AhKh3h4h5h", "AhKh5h4h3h"},
+		[]string{"AsKhJs9h8h7h6h", "Kh9h8h7h6h"},
+	}
+	for _, test := range t2 {
+		sfGot, fGot := Hand.bestStraightFlushHand(NewHand(test[0]))
+		fWant := NewHandUnsorted(test[1])
+		if sfGot != nil {
+			t.Errorf("Got %v, want nil.", sfGot)
+		}
+		if !cardsEqual(fGot, fWant) {
+			t.Errorf("Got %v, want %v", fGot, fWant)
+		}
+	}
+	// No straight flush, no flush
+	t3 := []string{
+		"2h3d4h5d6h7h8s",
+		"2h3d4hTd6h7h8s",
+	}
+	for _, test := range t3 {
+		sfGot, fGot := Hand.bestStraightFlushHand(NewHand(test))
+		if sfGot != nil {
+			t.Errorf("Got %v, want nil.", sfGot)
+		}
+		if fGot != nil {
+			t.Errorf("Got %v, want nil", fGot)
 		}
 	}
 }

@@ -16,12 +16,12 @@ const (
 	StraightFlush HandRank = iota
 )
 
-func (h Hand) bestStraightFlushHand() Hand {
+func (h Hand) bestStraightFlushHand() (Hand, Hand) {
 	suited := h.getFlushHand(5, 7)
 	if suited != nil {
-		return suited.bestStraightHand()
+		return suited.bestStraightHand(), suited[:5]
 	}
-	return nil
+	return nil, nil
 }
 
 func (h Hand) bestFourOfAKindHand() Hand {
@@ -195,22 +195,24 @@ func (h Hand) BestHand() (HandRank, Hand) {
 	if len(h) < 5 || len(h) > 7 {
 		log.Panicf("Invalid hand size: %d\n", len(h))
 	}
+	var hand Hand
+	var flushHand Hand
 	h.Sort()
-	if hand := h.bestStraightFlushHand(); hand != nil {
+	if hand, flushHand = h.bestStraightFlushHand(); hand != nil {
 		return StraightFlush, hand
-	} else if hand := h.bestFourOfAKindHand(); hand != nil {
+	} else if hand = h.bestFourOfAKindHand(); hand != nil {
 		return FourOfAKind, hand
-	} else if hand := h.bestFullHouseHand(); hand != nil {
+	} else if hand = h.bestFullHouseHand(); hand != nil {
 		return FullHouse, hand
-	} else if hand := h.bestFlushHand(); hand != nil {
-		return Flush, hand
-	} else if hand := h.bestStraightHand(); hand != nil {
+	} else if flushHand != nil {
+		return Flush, flushHand
+	} else if hand = h.bestStraightHand(); hand != nil {
 		return Straight, hand
-	} else if hand := h.bestThreeOfAKindHand(); hand != nil {
+	} else if hand = h.bestThreeOfAKindHand(); hand != nil {
 		return ThreeOfAKind, hand
-	} else if hand := h.bestTwoPairHand(); hand != nil {
+	} else if hand = h.bestTwoPairHand(); hand != nil {
 		return TwoPair, hand
-	} else if hand := h.bestPairHand(); hand != nil {
+	} else if hand = h.bestPairHand(); hand != nil {
 		return Pair, hand
 	}
 	return HighCard, h.bestHighCardHand()
